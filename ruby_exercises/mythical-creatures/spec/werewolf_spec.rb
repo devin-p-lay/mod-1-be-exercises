@@ -39,46 +39,82 @@ RSpec.describe Werewolf do
 
   it 'when starting as a werewolf, changing a second time makes it a werewolf' do
     werewolf = Werewolf.new('David', 'London')
-
+    
     werewolf.change!
     expect(werewolf.wolf?).to be true
-
+    
     werewolf.change!
     werewolf.change!
-
+    
     expect(werewolf.wolf?).to be true
   end
-
+  
   it 'is not hungry by default' do
     # your code here
+    werewolf = Werewolf.new('David', 'London')
+    expect(werewolf.hungry?).to be false
   end
-
+  
   it 'becomes hungry after changing to a werewolf' do
     # your code here
+    werewolf = Werewolf.new('David', 'London')
+    werewolf.change! 
+    expect(werewolf.hungry?).to be true
   end
-
+  
   class Victim
     attr_accessor :status
-
+    
     def initialize
       @status = :alive
     end
-  end
 
+    def consumed?
+      @status == :dead 
+    end
+  end
+  
   it 'consumes a victim' do
     # your code here
+    werewolf = Werewolf.new('David', 'London')
+    victim = Victim.new
+    
+    werewolf.change! 
+    werewolf.consume(victim)
+    
+    expect(victim.consumed?).to be true
   end
-
+  
   it 'cannot consume a victim if it is in human form' do
     # your code here
-  end
+    werewolf = Werewolf.new('David', 'London')
+    victim = Victim.new
 
+    expect(werewolf.consume(victim)).to eq 'I do not eat fellow humans!'
+    werewolf.change! 
+    expect(werewolf.consume(victim)).to eq 'Nom Nom Nomm'
+  end
+  
   it 'a werewolf that has consumed a human being is no longer hungry' do
     # your code here
+    werewolf = Werewolf.new('David', 'London')
+    victim = Victim.new
+    
+    werewolf.change! 
+    werewolf.consume(victim)
+    
+    expect(werewolf.hungry?).to be false
   end
-
+  
   it 'a werewolf who has consumed a victim makes the victim dead' do
     # your code here
+    werewolf = Werewolf.new('David', 'London')
+    victim = Victim.new
+    
+    werewolf.change! 
+    werewolf.consume(victim)
+
+    expect(victim.status).to eq :dead 
   end
 
 end
